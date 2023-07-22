@@ -356,11 +356,12 @@ func connect(ctx context.Context, config *Config, fallbackConfig *FallbackConfig
 				return nil, &connectError{config: config, msg: "failed to write password message", err: err}
 			}
 		case *pgproto3.AuthenticationSASL:
-			err = pgConn.scramAuth(msg.AuthMechanisms)
-			if err != nil {
-				pgConn.conn.Close()
-				return nil, &connectError{config: config, msg: "failed SASL auth", err: err}
-			}
+			return nil, &connectError{config: config, msg: "SASL not supported"}
+			//err = pgConn.scramAuth(msg.AuthMechanisms)
+			//if err != nil {
+			//	pgConn.conn.Close()
+			//	return nil, &connectError{config: config, msg: "failed SASL auth", err: err}
+			//}
 		case *pgproto3.AuthenticationGSS:
 			err = pgConn.gssAuth()
 			if err != nil {
